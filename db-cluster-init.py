@@ -38,7 +38,7 @@ master_ip = "192.168.0.35"
 slave_ip_list = ["192.168.0.36", "192.168.0.37", "192.168.0.38"]
 
 # root user's pass word 
-root_pw = "T4nk3r!12"
+root_pw = "somepassword"
 
 # database user's password
 db_user_pw = "mypassword"
