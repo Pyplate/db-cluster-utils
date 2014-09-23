@@ -120,10 +120,10 @@ def clean_server(host, username, password):
 # the program starts here
 def main():
 
-    clean_server('db1', 'root', 'T4nk3r!12')
-    clean_server('db2', 'root', 'T4nk3r!12')
-    clean_server('db3', 'root', 'T4nk3r!12')
-    clean_server('db4', 'root', 'T4nk3r!12')
+    clean_server('db1', 'root', 'somepassword')
+    clean_server('db2', 'root', 'somepassword')
+    clean_server('db3', 'root', 'somepassword')
+    clean_server('db4', 'root', 'somepassword')
 
 if __name__ == "__main__":
     main()
