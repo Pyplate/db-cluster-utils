@@ -26,6 +26,7 @@
 import MySQLdb
 import sys
 
+import db_cluster_utils
 
 
 def print_exception(e):
@@ -41,18 +42,17 @@ def print_exception(e):
 
 
 
-def query (conn, curs, query):
+def query (server, query):
 
     try:
 
-        curs.execute (query)
-
-        conn.commit()
+        server.curs.execute (query)
+        server.conn.commit()
 
         print "Done"
 
     except Exception, e:
-        conn.rollback()
+        server.conn.rollback()
         print "Query Failed: " + query
         print_exception(e)
 
@@ -65,11 +65,14 @@ def main(argv):
     the program starts here
     """
 
-    conn = MySQLdb.connect('192.168.0.35', 'root', 'T4nk3r!12', 'my_db')
-    curs = conn.cursor()
+    cluster = db_cluster_utils.db_cluster()
+    server = db_cluster_utils.db_server (cluster.master_ip, cluster.root_password)
+
+    query(server, "Use %s;" % cluster.database_name)
+
 
     # create tables
-    query(conn, curs, """CREATE TABLE pages (
+    query(server, """CREATE TABLE pages (
                             path TEXT, 
                             title TEXT, 
                             category TEXT,
@@ -81,7 +84,7 @@ def main(argv):
                           )""")
 
 
-    query(conn, curs, """CREATE TABLE categories (
+    query(server, """CREATE TABLE categories (
                             name TEXT,
                             path TEXT,
                             description TEXT,
@@ -92,7 +95,7 @@ def main(argv):
                           )""")
 
 
-    query(conn, curs, """CREATE TABLE users (
+    query(server, """CREATE TABLE users (
                             username TEXT, 
                             password TEXT,
                             email_addr TEXT,
@@ -100,19 +103,14 @@ def main(argv):
                           )""")
 
 
-    query(conn, curs, "INSERT INTO users VALUES ('Anna', '123456', 'anna@email.com', CURRENT_DATE());")
-    query(conn, curs, "INSERT INTO users VALUES ('Bob', '333456', 'bob@addr.com', CURRENT_DATE());")
-    query(conn, curs, "INSERT INTO users VALUES ('Claire', '444456', 'claire@addr.com', CURRENT_DATE());")
-    query(conn, curs, "INSERT INTO users VALUES ('Dave', '555456', 'dave@addr.com', CURRENT_DATE());")
-    query(conn, curs, "INSERT INTO users VALUES ('Emma', '666456', 'emma@addr.com', CURRENT_DATE());")
-    query(conn, curs, "INSERT INTO users VALUES ('Fred', '111456', 'fred@addr.com', CURRENT_DATE());")
-    query(conn, curs, "INSERT INTO users VALUES ('Gwen', '222456', 'gwen@addr.com', CURRENT_DATE());")
-    query(conn, curs, "INSERT INTO users VALUES ('Harry', '123123', 'harry@mail.com', CURRENT_DATE());")
-
-
-    # close the connection to the database
-    conn.close()
-    print "DB Connection closed\n"
+    query(server, "INSERT INTO users VALUES ('Anna', '123456', 'anna@email.com', CURRENT_DATE());")
+    query(server, "INSERT INTO users VALUES ('Bob', '333456', 'bob@addr.com', CURRENT_DATE());")
+    query(server, "INSERT INTO users VALUES ('Claire', '444456', 'claire@addr.com', CURRENT_DATE());")
+    query(server, "INSERT INTO users VALUES ('Dave', '555456', 'dave@addr.com', CURRENT_DATE());")
+    query(server, "INSERT INTO users VALUES ('Emma', '666456', 'emma@addr.com', CURRENT_DATE());")
+    query(server, "INSERT INTO users VALUES ('Fred', '111456', 'fred@addr.com', CURRENT_DATE());")
+    query(server, "INSERT INTO users VALUES ('Gwen', '222456', 'gwen@addr.com', CURRENT_DATE());")
+    query(server, "INSERT INTO users VALUES ('Harry', '123123', 'harry@mail.com', CURRENT_DATE());")
 
 
 
